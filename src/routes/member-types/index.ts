@@ -1,14 +1,13 @@
 import { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-schema-to-ts';
 import { idParamSchema } from '../../utils/reusedSchemas';
 import { changeMemberTypeBodySchema } from './schema';
-import type { MemberTypeEntity } from '../../utils/DB/entities/DBMemberTypes';
+// import type { MemberTypeEntity } from '../../utils/DB/entities/DBMemberTypes';
 
 const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> => {
-  fastify.get('/', async function (request, reply): Promise<MemberTypeEntity[]> {
+  fastify.get('/', async function (request, reply) {
     const memberTypes = await this.db.memberTypes.findMany();
 
-    reply.code(200).send(memberTypes);
-    return memberTypes; 
+    return memberTypes;
   });
 
   fastify.get(
@@ -18,15 +17,14 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
         params: idParamSchema,
       },
     },
-    async function (request, reply): Promise<MemberTypeEntity> {
+    async function (request, reply) {
       const memberType = await this.db.memberTypes.findOne({ key: 'id', equals: request.params.id });
 
       if (memberType) {
-        reply.code(200).send(memberType);
         return memberType;
       }
 
-      return reply.code(404);
+      return this.httpErrors.notFound()
     },
   );
 
@@ -38,15 +36,16 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
         params: idParamSchema,
       },
     },
-    async function (request, reply): Promise<MemberTypeEntity> {
-      const memberType = await this.db.memberTypes.change(request.params.id, request.body);
-
-      if (memberType) {
-        reply.code(200).send(memberType);
-        return memberType;
+    async function (request, reply){
+      try {
+        const memberType = await this.db.memberTypes.change(request.params.id, request.body);
+        
+        return memberType; 
+        
+      } catch (error) {
+        return this.httpErrors.badRequest()
+        
       }
-
-      return reply.code(400);
     },
   );
 };
