@@ -1,10 +1,10 @@
 import { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-schema-to-ts';
 import { idParamSchema } from '../../utils/reusedSchemas';
 import { createUserBodySchema, changeUserBodySchema, subscribeBodySchema } from './schemas';
-// import type { UserEntity } from '../../utils/DB/entities/DBUsers';
+import type { UserEntity } from '../../utils/DB/entities/DBUsers';
 
 const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> => {
-  fastify.get('/', async function (request, reply) {
+  fastify.get('/', async function (request, reply): Promise<UserEntity[]> {
     const users = await this.db.users.findMany();
 
     return users;
@@ -17,14 +17,14 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
         params: idParamSchema,
       },
     },
-    async function (request, reply) {
+    async function (request, reply): Promise<UserEntity> {
       const user = await this.db.users.findOne({ key: 'id', equals: request.params.id });
 
       if (user) {
         return user;
       }
 
-      return this.httpErrors.notFound();
+      throw this.httpErrors.notFound();
     },
   );
 
@@ -35,12 +35,14 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
         body: createUserBodySchema,
       },
     },
-    async function (request, reply) {
+    async function (request, reply): Promise<UserEntity> {
       const user = await this.db.users.create(request.body);
 
       if (user) {
         return user;
       }
+
+      throw this.httpErrors.badRequest();
     },
   );
 
@@ -51,7 +53,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
         params: idParamSchema,
       },
     },
-    async function (request, reply) {
+    async function (request, reply): Promise<UserEntity> {
       const user = await this.db.users.findOne({ key: 'id', equals: request.params.id });
 
       if (user) {
@@ -73,7 +75,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
         return await this.db.users.delete(request.params.id);
       }
 
-      return this.httpErrors.badRequest();
+      throw this.httpErrors.badRequest();
     },
   );
 
@@ -85,7 +87,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
         params: idParamSchema,
       },
     },
-    async function (request, reply) {
+    async function (request, reply): Promise<UserEntity> {
       const user = await this.db.users.findOne({ key: 'id', equals: request.body.userId });
 
       if (user) {
@@ -105,7 +107,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
         }
       }
 
-      return this.httpErrors.badRequest();
+      throw this.httpErrors.badRequest();
     },
   );
 
@@ -117,10 +119,10 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
         params: idParamSchema,
       },
     },
-    async function (request, reply) {
+    async function (request, reply): Promise<UserEntity> {
       const user = await this.db.users.findOne({ key: 'id', equals: request.body.userId });
 
-      if (user) {        
+      if (user) {
         const isUserSubscribed = user.subscribedToUserIds.includes(request.params.id);
 
         if (isUserSubscribed) {
@@ -131,10 +133,10 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
           return updatedUser;
         }
 
-        return this.httpErrors.badRequest();
+        throw this.httpErrors.badRequest();
       }
 
-      return this.httpErrors.badRequest();
+      throw this.httpErrors.badRequest();
     },
   );
 
@@ -146,13 +148,13 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
         params: idParamSchema,
       },
     },
-    async function (request, reply) {
+    async function (request, reply): Promise<UserEntity> {
       try {
         const user = await this.db.users.change(request.params.id, request.body);
 
         return user;
       } catch (error) {
-        return this.httpErrors.badRequest();
+        throw this.httpErrors.badRequest();
       }
     },
   );
