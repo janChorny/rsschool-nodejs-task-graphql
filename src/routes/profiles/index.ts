@@ -7,7 +7,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
   fastify.get('/', async function (request, reply) {
     const profiles = await this.db.profiles.findMany();
 
-    reply.header('Content-Type', 'application/json; charset=utf-8').send(profiles);
+    return profiles;
   });
 
   fastify.get(
@@ -36,10 +36,12 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
       },
     },
     async function (request, reply) {
+      const isUserProfileExist = await this.db.profiles.findOne({ key: 'userId', equals: request.body.userId });
+      const isMemberTypeExist = await this.db.memberTypes.findOne({key: 'id', equals: request.body.memberTypeId})
       const profile = await this.db.profiles.create(request.body);
 
-      if (profile) {
-        return reply.header('Content-Type', 'application/json; charset=utf-8').send(profile);
+      if (!isUserProfileExist && isMemberTypeExist) {
+        return profile;
       }
 
       return this.httpErrors.badRequest();

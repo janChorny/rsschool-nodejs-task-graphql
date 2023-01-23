@@ -41,8 +41,6 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
       if (user) {
         return user;
       }
-
-      return this.httpErrors.badRequest();
     },
   );
 
@@ -54,13 +52,28 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
       },
     },
     async function (request, reply) {
-      try {
-        await this.db.users.delete(request.params.id);
+      const user = await this.db.users.findOne({ key: 'id', equals: request.params.id });
 
-        return this.httpErrors.notFound();
-      } catch (error) {
-        return this.httpErrors.badRequest();
+      if (user) {
+        const profile = await this.db.profiles.findOne({ key: 'userId', equals: user.id });
+        const post = await this.db.posts.findOne({ key: 'userId', equals: user.id });
+
+        if (profile) await this.db.profiles.delete(profile.id);
+
+        if (post) await this.db.posts.delete(post.id);
+
+        const users = await this.db.users.findMany({ key: 'subscribedToUserIds', inArray: request.params.id });
+
+        for (let i = 0; i < users.length; i++) {
+          await this.db.users.change(users[i].id, {
+            subscribedToUserIds: users[i].subscribedToUserIds.filter((id) => id !== request.params.id),
+          });
+        }
+
+        return await this.db.users.delete(request.params.id);
       }
+
+      return this.httpErrors.badRequest();
     },
   );
 
@@ -72,7 +85,28 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
         params: idParamSchema,
       },
     },
-    async function (request, reply) {},
+    async function (request, reply) {
+      const user = await this.db.users.findOne({ key: 'id', equals: request.body.userId });
+
+      if (user) {
+        const isSubscriberExists = await this.db.users.findOne({ key: 'id', equals: request.params.id });
+        const isUserSubscribed = user.subscribedToUserIds.includes(request.params.id);
+
+        if (isUserSubscribed) {
+          return user;
+        }
+
+        if (isSubscriberExists) {
+          const updatedUser = await this.db.users.change(request.body.userId, {
+            subscribedToUserIds: [...user.subscribedToUserIds, request.params.id],
+          });
+
+          return updatedUser;
+        }
+      }
+
+      return this.httpErrors.badRequest();
+    },
   );
 
   fastify.post(
@@ -83,7 +117,25 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
         params: idParamSchema,
       },
     },
-    async function (request, reply) {},
+    async function (request, reply) {
+      const user = await this.db.users.findOne({ key: 'id', equals: request.body.userId });
+
+      if (user) {        
+        const isUserSubscribed = user.subscribedToUserIds.includes(request.params.id);
+
+        if (isUserSubscribed) {
+          const updatedUser = await this.db.users.change(request.body.userId, {
+            subscribedToUserIds: user.subscribedToUserIds.filter((id) => id !== request.params.id),
+          });
+
+          return updatedUser;
+        }
+
+        return this.httpErrors.badRequest();
+      }
+
+      return this.httpErrors.badRequest();
+    },
   );
 
   fastify.patch(

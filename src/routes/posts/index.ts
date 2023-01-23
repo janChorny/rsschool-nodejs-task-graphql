@@ -55,6 +55,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
     },
     async function (request, reply) {
       try {
+        
         await this.db.posts.delete(request.params.id);
 
         return this.httpErrors.notFound()
