@@ -1,4 +1,4 @@
-export const entitiesTypeDefs = `
+export const getEntitiesTypeDefs = `
     type Query {
       users: [UserEntity]!
       posts: [PostEntity]!

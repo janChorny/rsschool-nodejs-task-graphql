@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify/types/instance';
 
-export const entitiesResolver = {
+export const getEntitiesResolver = {
   Query: {
     users: async (root: unknown, _: unknown, { fastify }: { fastify: FastifyInstance }) => fastify.db.users.findMany(),
 

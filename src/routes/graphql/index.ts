@@ -1,9 +1,9 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { mergeTypeDefs, mergeResolvers } from '@graphql-tools/merge';
-import { entitiesTypeDefs } from './resolvers/entities/typeDefs';
-import { entitiesByIdTypeDefs } from './resolvers/entitiesById/typeDefs';
-import { entitiesResolver } from './resolvers/entities/resolver';
-import { entitiesByIdResolver } from './resolvers/entitiesById/resolver';
+import { getEntitiesTypeDefs } from "./resolvers/getEntities/typeDefs";
+import { getEntitiesByIdTypeDefs } from "./resolvers/getEntitiesById/typeDefs";
+import { getEntitiesResolver } from "./resolvers/getEntities/resolver";
+import { getEntitiesByIdResolver } from "./resolvers/getEntitiesById/resolver";
 import { createUserTypeDefs } from './resolvers/createUser/typeDefs';
 import { createUserResolver } from './resolvers/createUser/resolver';
 import { createProfileTypeDefs } from './resolvers/createProfile/typeDefs';
@@ -25,8 +25,8 @@ import { unsubscribeFromUserResolver } from './resolvers/unsubscribeFromUser/res
 
 export const schema = makeExecutableSchema({
   typeDefs: mergeTypeDefs([
-    entitiesTypeDefs,
-    entitiesByIdTypeDefs,
+    getEntitiesTypeDefs,
+    getEntitiesByIdTypeDefs,
     createUserTypeDefs,
     createProfileTypeDefs,
     createPostTypeDefs,
@@ -39,8 +39,8 @@ export const schema = makeExecutableSchema({
     unsubscribeFromUserTypeDefs,
   ]),
   resolvers: mergeResolvers([
-    entitiesResolver,
-    entitiesByIdResolver,
+    getEntitiesResolver,
+    getEntitiesByIdResolver,
     createUserResolver,
     createProfileResolver,
     createPostResolver,
