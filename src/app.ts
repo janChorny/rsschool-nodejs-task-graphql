@@ -1,25 +1,26 @@
-import { join } from 'path';
-import AutoLoad from '@fastify/autoload';
-import { FastifyPluginAsync } from 'fastify';
+import { join } from "path";
+import AutoLoad from "@fastify/autoload";
+import { FastifyPluginAsync } from "fastify";
 import mercurius from "mercurius";
-import { schema } from './routes/graphql';
-import { loaders } from './routes/graphql/resolvers/getUserByIdWithEntities/resolver';
+import { schema } from "./routes/graphql";
+import { loaders } from "./routes/graphql/resolvers/getUserByIdWithEntities/resolver";
 
 const app: FastifyPluginAsync = async (fastify): Promise<void> => {
   fastify.register(mercurius, {
     schema,
     graphiql: true,
     context: () => fastify,
-    loaders
+    loaders,
+    cache: false,
   });
 
   fastify.register(AutoLoad, {
-    dir: join(__dirname, 'plugins'),
+    dir: join(__dirname, "plugins"),
     options: {},
   });
 
   fastify.register(AutoLoad, {
-    dir: join(__dirname, 'routes'),
+    dir: join(__dirname, "routes"),
     options: {},
   });
 };

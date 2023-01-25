@@ -1,7 +1,5 @@
 import { FastifyInstance } from "fastify/types/instance";
-// import { ProfileEntity } from "../../../../utils/DB/entities/DBProfiles";
 import { MercuriusLoaders } from "mercurius";
-import DB from "../../../../utils/DB/DB";
 
 export const getUserByIdWithEntitiesResolver = {
   Query: {
@@ -43,46 +41,15 @@ export const getUserByIdWithEntitiesResolver = {
 
 export const loaders: MercuriusLoaders = {
   User: {
-    profile: {
-      async loader(queries: any) {
-        const db = new DB();
+    async profile(queries, ctx) {
+      return queries.map(({ obj, params }) => {
+        const { db } = ctx.app;
 
-        const profile = await db.profiles.findOne({
+        return db.profiles.findOne({
           key: "userId",
-          equals: queries.id,
+          equals: obj.id,
         });
-
-        if (profile) {
-          const { userId, ...rest } = profile;
-          return rest;
-        }
-      },
-      opts: {
-        cache: false,
-      },
+      });
     },
   },
 };
-
-// const loaders = {
-//     Song: {
-//             genre: async (queries, {client}) => {
-//             let genreids = queries.map(({ obj }) => obj.genreid)
-//             let {rows} = await client.query(`
-//             SELECT genreid, genredescription genre FROM genres WHERE  genres.genreid = ANY ($1)
-//             `,[genreids])
-//             return genreids.map(genreid => {
-//                return rows.filter(genreitem => genreitem.genreid === genreid)[0].genre
-//             })
-//         },
-//     }
-// }
-
-// type Song {
-//  songid: ID!
-//  songname: String!
-//  genre: String!
-// }
-// type Query {
-//  songs: [Song]
-// }
