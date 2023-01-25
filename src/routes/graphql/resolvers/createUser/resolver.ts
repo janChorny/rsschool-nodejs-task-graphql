@@ -5,8 +5,8 @@ export const createUserResolver = {
   Mutation: {
     createUser: async (
       root: unknown,
-      { input }: { input: Omit<UserEntity, 'id' | 'subscribedToUserIds'> },
-      { fastify }: { fastify: FastifyInstance },
+      { input }: { input: Omit<UserEntity, "id" | "subscribedToUserIds"> },
+      fastify: FastifyInstance
     ) => {
       const user = await fastify.db.users.create(input);
 

@@ -1,12 +1,15 @@
-import { FastifyInstance } from 'fastify/types/instance';
-import { PostEntity } from '../../../../utils/DB/entities/DBPosts';
+import { FastifyInstance } from "fastify/types/instance";
+import { PostEntity } from "../../../../utils/DB/entities/DBPosts";
 
 export const updatePostResolver = {
   Mutation: {
     updatePost: async (
       root: unknown,
-      { id, input }: { id: string, input: Partial<Omit<PostEntity, 'id' | 'userId'>> },
-      { fastify }: { fastify: FastifyInstance },
+      {
+        id,
+        input,
+      }: { id: string; input: Partial<Omit<PostEntity, "id" | "userId">> },
+      fastify: FastifyInstance
     ) => {
       try {
         const post = await fastify.db.posts.change(id, input);

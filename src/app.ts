@@ -1,14 +1,16 @@
 import { join } from 'path';
 import AutoLoad from '@fastify/autoload';
 import { FastifyPluginAsync } from 'fastify';
-import mercurius from 'mercurius';
+import mercurius from "mercurius";
 import { schema } from './routes/graphql';
+import { loaders } from './routes/graphql/resolvers/getUserByIdWithEntities/resolver';
 
 const app: FastifyPluginAsync = async (fastify): Promise<void> => {
   fastify.register(mercurius, {
     schema,
     graphiql: true,
-    context: () => ({ fastify }),
+    context: () => fastify,
+    loaders
   });
 
   fastify.register(AutoLoad, {

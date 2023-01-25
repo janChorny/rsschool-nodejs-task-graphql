@@ -6,7 +6,7 @@ export const unsubscribeFromUserResolver = {
     unsubscribeFromUser: async (
       root: unknown,
       { id, input }: { id: string; input: Pick<ProfileEntity, "userId"> },
-      { fastify }: { fastify: FastifyInstance }
+      fastify: FastifyInstance
     ) => {
       const user = await fastify.db.users.findOne({
         key: "id",
