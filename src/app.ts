@@ -4,7 +4,8 @@ import { FastifyPluginAsync } from 'fastify';
 import mercurius from 'mercurius';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { mergeTypeDefs, mergeResolvers } from '@graphql-tools/merge';
-import { gql } from 'mercurius-codegen';
+// import { gql } from 'mercurius-codegen';
+import DB from './utils/DB/DB';
 
 const app: FastifyPluginAsync = async (fastify): Promise<void> => {
   type createUserDTO = {
@@ -12,11 +13,12 @@ const app: FastifyPluginAsync = async (fastify): Promise<void> => {
     lastName: 'string';
     email: 'string';
   };
-  const typeDefs = gql`
+
+  const typeDefs = `
     type Query {
       users: [UserEntity]!
       posts: [PostEntity]!
-      user(id: String): UserEntity
+      user(id: ID!): UserEntity
     }
     input CreateUserInput {
       firstName: String!
@@ -41,14 +43,31 @@ const app: FastifyPluginAsync = async (fastify): Promise<void> => {
       createUser(input: CreateUserInput!): UserEntity
     }
   `;
+
   const resolvers = {
     Query: {
       users: async () => fastify.db.users.findMany(),
       posts: async () => fastify.db.posts.findMany(),
-      user: async (id: string) => fastify.db.users.findOne({ key: 'id', equals: id }),
+      user: async (root: unknown, { id }: { id: string }, { db }: { db: DB }) => {
+        const user = await db.users.findOne({ key: 'id', equals: id });
+
+        if (user) {
+          return user;
+        }
+
+        throw fastify.httpErrors.notFound();
+      },
     },
     Mutation: {
-      createUser: async (input: createUserDTO) => await fastify.db.users.create(input),
+      createUser: async (root: unknown, { input }: { input: createUserDTO }, { db }: { db: DB }) => {
+        const user = await db.users.create(input);
+
+        if (user) {
+          return user;
+        }
+
+        throw fastify.httpErrors.badRequest();
+      },
     },
   };
 
@@ -58,6 +77,7 @@ const app: FastifyPluginAsync = async (fastify): Promise<void> => {
       resolvers: mergeResolvers([resolvers]),
     }),
     graphiql: true,
+    context: () => ({ db : fastify.db}) 
   });
 
   fastify.register(AutoLoad, {
