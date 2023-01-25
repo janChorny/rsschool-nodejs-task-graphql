@@ -10,6 +10,8 @@ import { createProfileTypeDefs } from './resolvers/createProfile/typeDefs';
 import { createProfileResolver } from './resolvers/createProfile/resolver';
 import { createPostResolver } from './resolvers/createPost/resolver';
 import { createPostTypeDefs } from './resolvers/createPost/typeDefs';
+import { updatePostTypeDefs } from './resolvers/updatePost/typeDefs';
+import { updatePostResolver } from './resolvers/updatePost/resolver';
 
 export const schema = makeExecutableSchema({
   typeDefs: mergeTypeDefs([
@@ -18,6 +20,7 @@ export const schema = makeExecutableSchema({
     createUserTypeDefs,
     createProfileTypeDefs,
     createPostTypeDefs,
+    updatePostTypeDefs,
   ]),
   resolvers: mergeResolvers([
     entitiesResolver,
@@ -25,5 +28,6 @@ export const schema = makeExecutableSchema({
     createUserResolver,
     createProfileResolver,
     createPostResolver,
+    updatePostResolver,
   ]),
 });
