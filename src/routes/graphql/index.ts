@@ -16,3 +16,15 @@
 // };
 
 // export default plugin;
+
+import { makeExecutableSchema } from '@graphql-tools/schema';
+import { mergeTypeDefs, mergeResolvers } from '@graphql-tools/merge';
+import { entitiesTypeDefs } from './resolvers/entities/typeDefs';
+import { entitiesByIdTypeDefs } from './resolvers/entitiesById/typeDefs';
+import { entitiesResolver } from './resolvers/entities/resolver';
+import { entitiesByIdResolver } from './resolvers/entitiesById/resolver';
+
+export const schema = makeExecutableSchema({
+      typeDefs: mergeTypeDefs([entitiesTypeDefs, entitiesByIdTypeDefs]),
+      resolvers: mergeResolvers([entitiesResolver, entitiesByIdResolver]),
+})

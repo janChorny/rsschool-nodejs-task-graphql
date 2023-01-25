@@ -2,12 +2,13 @@ import { join } from 'path';
 import AutoLoad from '@fastify/autoload';
 import { FastifyPluginAsync } from 'fastify';
 import mercurius from 'mercurius';
-import { makeExecutableSchema } from '@graphql-tools/schema';
-import { mergeTypeDefs, mergeResolvers } from '@graphql-tools/merge';
-import { entitiesResolver } from './routes/graphql/resolvers/entities/resolver';
-import { entitiesTypeDefs } from './routes/graphql/resolvers/entities/typeDefs';
-import { entitiesByIdTypeDefs } from './routes/graphql/resolvers/entitiesById/typeDefs';
-import { entitiesByIdResolver } from './routes/graphql/resolvers/entitiesById/resolver';
+// import { makeExecutableSchema } from '@graphql-tools/schema';
+// import { mergeTypeDefs, mergeResolvers } from '@graphql-tools/merge';
+// import { entitiesResolver } from './routes/graphql/resolvers/entities/resolver';
+// import { entitiesTypeDefs } from './routes/graphql/resolvers/entities/typeDefs';
+// import { entitiesByIdTypeDefs } from './routes/graphql/resolvers/entitiesById/typeDefs';
+// import { entitiesByIdResolver } from './routes/graphql/resolvers/entitiesById/resolver';
+import { schema } from './routes/graphql';
 // import { gql } from 'mercurius-codegen';
 // import DB from './utils/DB/DB';
 
@@ -86,10 +87,7 @@ const app: FastifyPluginAsync = async (fastify): Promise<void> => {
   // };
 
   fastify.register(mercurius, {
-    schema: makeExecutableSchema({
-      typeDefs: mergeTypeDefs([entitiesTypeDefs, entitiesByIdTypeDefs]),
-      resolvers: mergeResolvers([entitiesResolver, entitiesByIdResolver]),
-    }),
+    schema,
     graphiql: true,
     context: () => ({ fastify }),
   });
