@@ -12,6 +12,12 @@ import { createPostResolver } from './resolvers/createPost/resolver';
 import { createPostTypeDefs } from './resolvers/createPost/typeDefs';
 import { updatePostTypeDefs } from './resolvers/updatePost/typeDefs';
 import { updatePostResolver } from './resolvers/updatePost/resolver';
+import { updateMemberTypeResolver } from './resolvers/updateMemberType/resolver';
+import { updateUserResolver } from './resolvers/updateUser/resolver';
+import { updateProfileResolver } from './resolvers/updateProfile/resolver';
+import { updateProfileTypeDefs } from './resolvers/updateProfile/typeDefs';
+import { updateUserTypeDefs } from './resolvers/updateUser/typeDefs';
+import { updateMemberTypeTypeDefs } from './resolvers/updateMemberType/typeDefs';
 
 export const schema = makeExecutableSchema({
   typeDefs: mergeTypeDefs([
@@ -21,6 +27,10 @@ export const schema = makeExecutableSchema({
     createProfileTypeDefs,
     createPostTypeDefs,
     updatePostTypeDefs,
+    updateUserTypeDefs,
+    updateProfileTypeDefs,
+    updatePostTypeDefs,
+    updateMemberTypeTypeDefs,
   ]),
   resolvers: mergeResolvers([
     entitiesResolver,
@@ -29,5 +39,8 @@ export const schema = makeExecutableSchema({
     createProfileResolver,
     createPostResolver,
     updatePostResolver,
+    updateMemberTypeResolver,
+    updateUserResolver,
+    updateProfileResolver,
   ]),
 });
