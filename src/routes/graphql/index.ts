@@ -20,6 +20,8 @@ import { updateUserTypeDefs } from './resolvers/updateUser/typeDefs';
 import { updateMemberTypeTypeDefs } from './resolvers/updateMemberType/typeDefs';
 import { subscribeToUserTypeDefs } from './resolvers/subscribeToUser/typeDefs';
 import { subscribeToUserResolver } from './resolvers/subscribeToUser/resolver';
+import { unsubscribeFromUserTypeDefs } from './resolvers/unsubscribeFromUser/typeDefs';
+import { unsubscribeFromUserResolver } from './resolvers/unsubscribeFromUser/resolver';
 
 export const schema = makeExecutableSchema({
   typeDefs: mergeTypeDefs([
@@ -34,6 +36,7 @@ export const schema = makeExecutableSchema({
     updatePostTypeDefs,
     updateMemberTypeTypeDefs,
     subscribeToUserTypeDefs,
+    unsubscribeFromUserTypeDefs,
   ]),
   resolvers: mergeResolvers([
     entitiesResolver,
@@ -46,5 +49,6 @@ export const schema = makeExecutableSchema({
     updateUserResolver,
     updateProfileResolver,
     subscribeToUserResolver,
+    unsubscribeFromUserResolver,
   ]),
 });
