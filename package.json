@@ -36,8 +36,7 @@
     "graphql": "^16.6.0",
     "graphql-depth-limit": "^1.1.0",
     "lodash": "^4.17.21",
-    "mercurius": "^11.5.0",
-    "mercurius-codegen": "^5.0.1"
+    "mercurius": "^11.5.0"
   },
   "devDependencies": {
     "@types/graphql-depth-limit": "^1.1.3",
