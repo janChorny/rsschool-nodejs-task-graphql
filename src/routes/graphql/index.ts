@@ -24,6 +24,8 @@ import { unsubscribeFromUserTypeDefs } from './resolvers/unsubscribeFromUser/typ
 import { unsubscribeFromUserResolver } from './resolvers/unsubscribeFromUser/resolver';
 import { getUserByIdWithEntitiesResolver } from './resolvers/getUserByIdWithEntities/resolver';
 import { getUserByIdWithEntitiesTypeDefs } from './resolvers/getUserByIdWithEntities/typeDefs';
+import { getUsersWithEntitiesResolver } from './resolvers/getUsersWithEntities/resolver';
+import { getUsersWithEntitiesTypeDefs } from './resolvers/getUsersWithEntities/typeDefs';
 
 export const schema = makeExecutableSchema({
   typeDefs: mergeTypeDefs([
@@ -40,6 +42,7 @@ export const schema = makeExecutableSchema({
     subscribeToUserTypeDefs,
     unsubscribeFromUserTypeDefs,
     getUserByIdWithEntitiesTypeDefs,
+    getUsersWithEntitiesTypeDefs,
   ]),
   resolvers: mergeResolvers([
     getEntitiesResolver,
@@ -54,5 +57,6 @@ export const schema = makeExecutableSchema({
     subscribeToUserResolver,
     unsubscribeFromUserResolver,
     getUserByIdWithEntitiesResolver,
+    getUsersWithEntitiesResolver,
   ]),
 });
