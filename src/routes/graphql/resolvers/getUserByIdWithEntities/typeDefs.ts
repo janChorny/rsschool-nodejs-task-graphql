@@ -1,14 +1,14 @@
 export const getUserByIdWithEntitiesTypeDefs = `
     type Query {
-      getUserByIdWithEntities(id: ID!): User
+      getUserByIdWithEntities(id: ID!): UserWithEntities
     } 
-    type User {
+    type UserWithEntities {
       id: ID!
       firstName: String!
       lastName: String!
       email: String!
       subscribedToUserIds: [String]!
-      post: [Post]
+      posts: [Post]
       profile: Profile
       memberType: MemberType
     }

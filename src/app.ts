@@ -3,7 +3,7 @@ import AutoLoad from "@fastify/autoload";
 import { FastifyPluginAsync } from "fastify";
 import mercurius from "mercurius";
 import { schema } from "./routes/graphql";
-import { loaders } from "./routes/graphql/resolvers/getUserByIdWithEntities/resolver";
+import { loaders } from "./routes/graphql/dataLoader";
 
 const app: FastifyPluginAsync = async (fastify): Promise<void> => {
   fastify.register(mercurius, {
