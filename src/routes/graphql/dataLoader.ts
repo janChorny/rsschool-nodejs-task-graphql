@@ -1,4 +1,5 @@
 import { MercuriusLoaders } from "mercurius";
+import { UserEntity } from "../../utils/DB/entities/DBUsers";
 
 export const loaders: MercuriusLoaders = {
   UserWithEntities: {
@@ -47,7 +48,7 @@ export const loaders: MercuriusLoaders = {
     },
   },
   UsersWithSubscribedUsersProfile: {
-    async subscribedToUserIds(queries, ctx) {
+    async subscribedProfile(queries, ctx) {
       const { db } = ctx.app;
 
       return queries.map(async ({ obj, params }) => {
@@ -56,6 +57,23 @@ export const loaders: MercuriusLoaders = {
         return subscribedToUserIds.map(
           async (id: string) =>
             await db.profiles.findOne({ key: "userId", equals: id })
+        );
+      });
+    },
+  },
+  UserWithUsersSubscribedPosts: {
+    async subscriberPosts(queries, ctx) {
+      const { db } = ctx.app;
+
+      return queries.map(async ({ obj, params }) => {
+        const users: UserEntity[] = await db.users.findMany({
+          key: "subscribedToUserIds",
+          inArray: obj.id,
+        });
+
+        return users.map(
+          async (user) =>
+            await db.posts.findOne({ key: "userId", equals: user.id })
         );
       });
     },
