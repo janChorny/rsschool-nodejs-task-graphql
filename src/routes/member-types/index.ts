@@ -20,7 +20,11 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
       },
     },
     async function (request, reply): Promise<MemberTypeEntity | null> {
-      return await fastify.db.memberTypes.findOne({key: 'id', equals: request.params.id})
+      const memberType = await fastify.db.memberTypes.findOne({ key: 'id', equals: request.params.id })
+      if (memberType === null) {
+        throw fastify.httpErrors.notFound();
+      }
+      return memberType;
     }
   );
 
@@ -33,7 +37,13 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
       },
     },
     async function (request, reply): Promise<MemberTypeEntity> {
-      return await fastify.db.memberTypes.change(request.params.id, request.body);
+      const memberType = await fastify.db.memberTypes.findOne({ key: 'id', equals: request.params.id })
+      if (memberType === null) {
+        throw fastify.httpErrors.notFound();
+      }
+
+      const result = await fastify.db.memberTypes.change(request.params.id, request.body);
+      return result!;
     }
   );
 };
