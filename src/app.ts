@@ -4,6 +4,7 @@ import { FastifyPluginAsync } from "fastify";
 import mercurius from "mercurius";
 import { schema } from "./routes/graphql";
 import { loaders } from "./routes/graphql/dataLoader";
+const depthLimit = require("graphql-depth-limit");
 
 const app: FastifyPluginAsync = async (fastify): Promise<void> => {
   fastify.register(mercurius, {
@@ -12,6 +13,7 @@ const app: FastifyPluginAsync = async (fastify): Promise<void> => {
     context: () => fastify,
     loaders,
     cache: false,
+    validationRules: [depthLimit(6)],
   });
 
   fastify.register(AutoLoad, {
