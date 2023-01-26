@@ -46,4 +46,18 @@ export const loaders: MercuriusLoaders = {
       });
     },
   },
+  UsersWithSubscribedUsersProfile: {
+    async subscribedToUserIds(queries, ctx) {
+      const { db } = ctx.app;
+
+      return queries.map(async ({ obj, params }) => {
+        const { subscribedToUserIds } = obj;
+
+        return subscribedToUserIds.map(
+          async (id: string) =>
+            await db.profiles.findOne({ key: "userId", equals: id })
+        );
+      });
+    },
+  },
 };
