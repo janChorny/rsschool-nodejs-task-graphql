@@ -12,17 +12,23 @@ export const createProfileResolver = {
         key: "userId",
         equals: input.userId,
       });
+
       const isMemberTypeExist = await fastify.db.memberTypes.findOne({
         key: "id",
         equals: input.memberTypeId,
       });
+
       const profile = await fastify.db.profiles.create(input);
 
-      if (!isUserProfileExist && isMemberTypeExist) {
-        return profile;
+      if (isUserProfileExist) {
+        throw fastify.httpErrors.badRequest("user profile already exists");
       }
 
-      throw fastify.httpErrors.badRequest();
+      if (!isMemberTypeExist) {
+        throw fastify.httpErrors.badRequest("incorrect member types");
+      }
+
+      return profile;
     },
   },
 };
