@@ -98,72 +98,39 @@ export const loaders: MercuriusLoaders = {
                 equals: user.id,
               });
 
-              if (nestedUser) {
-                const nestedUserSubscriptions = await Promise.all(
-                  nestedUser.subscribedToUserIds.map(async (_id) => {
-                    return await db.users.findOne({ key: "id", equals: _id });
-                  })
-                );
-
-                return {
-                  ...nestedUser,
-                  subscribedToUser: nestedUserSubscriptions,
-                };
-              }
+              return {
+                ...nestedUser,
+                subscribedToUser: [],
+              };
             })
           );
         }
       });
-      //   const user = await db.users.findOne({ key: "id", equals: obj.id });
-      //   console.log(1111);
-      //   console.log(user);
-
-      //   if (user) {
-      //     const userSubscriptions = user.subscribedToUserIds;
-      //     console.log(2222);
-      //     console.log(userSubscriptions);
-
-      //     return Promise.all(
-      //       userSubscriptions.map(async (id) => {
-      //         const nestedUser = await db.users.findOne({
-      //           key: "id",
-      //           equals: obj.id,
-      //         });
-
-      //         if (nestedUser) {
-      //           const nestedUserSubscriptions = await Promise.all(
-      //             nestedUser.subscribedToUserIds.map(async (_id) => {
-      //               return await db.users.findOne({ key: "id", equals: _id });
-      //             })
-      //           );
-      //           console.log(333333);
-      //           console.log(nestedUserSubscriptions);
-      //           const asd = {
-      //             ...nestedUser,
-      //             userSubscribedTo: nestedUserSubscriptions,
-      //           };
-      //           console.log(44444);
-      //           console.log(asd);
-      //           return asd;
-      //         }
-      //       })
-      //     );
-      //   }
-      // });
     },
-    // async subscribedToUser(queries, ctx) {
-    //   const { db } = ctx.app;
+    async userSubscribedTo(queries, ctx) {
+      const { db } = ctx.app;
 
-    //   return queries.map(async ({ obj, params }) => {
-    //     // const users: UserEntity[] = await db.users.findMany({
-    //     //   key: "subscribedToUserIds",
-    //     //   inArray: obj.id,
-    //     // });
-    //     // return users.map(
-    //     //   async (user) =>
-    //     //     await db.posts.findOne({ key: "userId", equals: user.id })
-    //     // );
-    //   });
-    // },
+      return queries.map(async ({ obj, params }) => {
+        const user = await db.users.findOne({ key: "id", equals: obj.id });
+
+        if (user) {
+          const subscriptions: string[] = user.subscribedToUserIds;
+
+          return Promise.all(
+            subscriptions.map(async (id) => {
+              const nestedUser = await db.users.findOne({
+                key: "id",
+                equals: id,
+              });
+
+              return {
+                ...nestedUser,
+                userSubscribedTo: [],
+              };
+            })
+          );
+        }
+      });
+    },
   },
 };

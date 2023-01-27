@@ -10,7 +10,7 @@ export const getSubscribeAndSubscribedUsersTypeDefs = `
       email: String!
       subscribedToUserIds: [String]!
       subscribedToUser: [UserSubscriptions]
+      userSubscribedTo: [UserSubscriptions]
     }
-    `;
+`;
 
-// userSubscribedTo: [UserSubscriptions]
