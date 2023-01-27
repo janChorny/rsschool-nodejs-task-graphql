@@ -57,27 +57,28 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
         throw fastify.httpErrors.badRequest();
       }
 
-      const userToDelete = await fastify.db.users.findOne({ key: 'id', equals: request.params.id });
-      if (userToDelete === null) {
-        throw fastify.httpErrors.notFound();
-      } 
-      const userToDeleteProfile = await fastify.db.profiles.findOne({ key: 'userId', equals: userToDelete.id });
-      if (userToDeleteProfile) {
-        await fastify.db.posts.delete(userToDeleteProfile.id)
+      try {
+        const userToDelete = await fastify.db.users.delete(request.params.id);
+
+        const userToDeleteProfile = await fastify.db.profiles.findOne({ key: 'userId', equals: userToDelete.id });
+        if (userToDeleteProfile) {
+          await fastify.db.profiles.delete(userToDeleteProfile.id);
+        }
+
+        const userToDeletePosts = await fastify.db.posts.findMany({ key: 'userId', equals: userToDelete.id });
+        userToDeletePosts.forEach(async (post) => await fastify.db.posts.delete(post.id));
+
+        const userToDeleteSubscribers = await fastify.db.users.findMany({ key: 'subscribedToUserIds', equals: [userToDelete.id] });
+        userToDeleteSubscribers.forEach(async (subscriber) => await fastify.db.users.change(subscriber.id, {
+          subscribedToUserIds: subscriber.subscribedToUserIds.filter((subscriberId) => subscriberId !== userToDelete.id),
+            })
+        );
+
+        return userToDelete;
+
+      } catch (error) {
+        throw fastify.httpErrors.badRequest();
       }
-      const userToDeletePosts = await fastify.db.posts.findMany({ key: 'userId', equals: userToDelete.id });
-      userToDeletePosts.forEach(async (post) => {
-        await fastify.db.posts.delete(post.id)
-      })
-      const userToDeleteSubscribers = await fastify.db.users.findMany({ key: 'subscribedToUserIds', equals: [userToDelete.id] });
-      userToDeleteSubscribers.forEach(async (subscriber)=>
-        await fastify.db.users.change(subscriber.id, {
-          subscribedToUserIds: subscriber.subscribedToUserIds.filter(
-            (subscriberId) => subscriberId !== userToDelete.id)
-          })
-        )
-      await fastify.db.users.delete(request.params.id);
-      return userToDelete;
     }
   );
 
@@ -90,24 +91,22 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
       },
     },
     async function (request, reply): Promise<UserEntity> {
-      const subscriber = await fastify.db.users.findOne({ key: 'id', equals: request.params.id });
-      if (subscriber === null) {
-        throw fastify.httpErrors.notFound();
-      } 
-
-      const userSubscribeTo= await fastify.db.users.findOne({ key: 'id', equals: request.body.userId });
-      if (userSubscribeTo === null) {
+      const userSubscriber = await fastify.db.users.findOne({ key: 'id', equals: request.params.id });
+      const userFollower = await fastify.db.users.findOne({ key: 'id', equals: request.body.userId});
+      if (!userSubscriber || !userFollower) {
         throw fastify.httpErrors.notFound();
       }
 
-      if (userSubscribeTo.subscribedToUserIds.includes(request.params.id)) {
+      const userIndex = userSubscriber.subscribedToUserIds.findIndex((user) => user === request.body.userId);
+      if (userIndex != -1) {
         throw fastify.httpErrors.badRequest();
       }
 
-      userSubscribeTo.subscribedToUserIds.push(request.params.id);
-      await fastify.db.users.change(request.body.userId, userSubscribeTo);
-
-      return subscriber;
+      const subscriberSubscribedToIds = [...userSubscriber.subscribedToUserIds, userFollower.id];
+      const followerSubscribedToUserIds = [...userFollower.subscribedToUserIds, userSubscriber.id];
+      const userToUpdate = await fastify.db.users.change(request.params.id, { subscribedToUserIds: subscriberSubscribedToIds});
+      await fastify.db.users.change(request.body.userId, { subscribedToUserIds: followerSubscribedToUserIds})      
+      return userToUpdate;
     }
   );
 
@@ -120,25 +119,25 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
       },
     },
     async function (request, reply): Promise<UserEntity> {
-      const subscriber = await fastify.db.users.findOne({ key: 'id', equals: request.body.userId });
-      if (subscriber === null) {
+      const userSubscriber = await fastify.db.users.findOne({ key: 'id', equals: request.params.id });
+      const userFollower = await fastify.db.users.findOne({ key: 'id', equals: request.body.userId });
+      if (!userSubscriber || !userFollower) {
         throw fastify.httpErrors.notFound();
       }
 
-      if (!subscriber.subscribedToUserIds.includes(request.params.id)) {
+      const userSubscriberIndex = userSubscriber.subscribedToUserIds.findIndex((user) => user === request.body.userId);
+      const userFollowerIndex = userFollower.subscribedToUserIds.findIndex((user) => user === request.params.id);
+      if (userSubscriberIndex === -1 || userFollowerIndex === -1) {
         throw fastify.httpErrors.badRequest();
       }
 
-      const userToUnsubscribe = await fastify.db.users.findOne({ key: 'id', equals: request.params.id });
-      if (userToUnsubscribe === null) {
-        throw fastify.httpErrors.notFound();
-      }
+      const userToUpdate = await fastify.db.users.change(request.params.id, { subscribedToUserIds: userSubscriber.subscribedToUserIds.filter(
+        (user) => user != request.body.userId)});
 
-      const removeIndex = subscriber.subscribedToUserIds.indexOf(request.params.id);
-      subscriber.subscribedToUserIds.slice(removeIndex, 1);
-      await fastify.db.users.change(request.body.userId, subscriber);
+      await fastify.db.users.change(request.body.userId, {subscribedToUserIds: userFollower.subscribedToUserIds.filter(
+        (user) => user != request.params.id)});
 
-      return subscriber;
+      return userToUpdate;
     }
   );
 
