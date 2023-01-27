@@ -16,7 +16,7 @@ export const updateMemberTypeResolver = {
 
         return memberType;
       } catch (error) {
-        throw fastify.httpErrors.badRequest();
+        throw fastify.httpErrors.badRequest("incorrect member types id");
       }
     },
   },
