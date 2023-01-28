@@ -26,10 +26,10 @@ export const unsubscribeFromUserResolver = {
           return updatedUser;
         }
 
-        throw fastify.httpErrors.badRequest();
+        throw fastify.httpErrors.badRequest("user is not subscribed");
       }
 
-      throw fastify.httpErrors.badRequest();
+      throw fastify.httpErrors.badRequest("user not found");
     },
   },
 };
