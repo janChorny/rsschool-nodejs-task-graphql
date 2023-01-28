@@ -13,7 +13,7 @@ export const updateUserResolver = {
 
         return user;
       } catch (error) {
-        throw fastify.httpErrors.badRequest();
+        throw fastify.httpErrors.badRequest("user not found");
       }
     },
   },
