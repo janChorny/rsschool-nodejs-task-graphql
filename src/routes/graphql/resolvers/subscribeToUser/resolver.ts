@@ -18,10 +18,11 @@ export const subscribeToUserResolver = {
           key: "id",
           equals: id,
         });
+
         const isUserSubscribed = user.subscribedToUserIds.includes(id);
 
         if (isUserSubscribed) {
-          return user;
+          return fastify.httpErrors.badRequest("user is already subscribed");
         }
 
         if (isSubscriberExists) {
@@ -33,7 +34,7 @@ export const subscribeToUserResolver = {
         }
       }
 
-      throw fastify.httpErrors.badRequest();
+      throw fastify.httpErrors.badRequest("user not found");
     },
   },
 };
