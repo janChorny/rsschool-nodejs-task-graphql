@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify/types/instance";
 
 export const getUserByIdWithEntitiesResolver = {
   Query: {
-    getUserByIdWithEntities: async (
+    userWithEntities: async (
       root: unknown,
       { id }: { id: string },
       fastify: FastifyInstance
@@ -13,7 +13,7 @@ export const getUserByIdWithEntitiesResolver = {
         return user;
       }
 
-      throw fastify.httpErrors.notFound();
+      throw fastify.httpErrors.notFound("user not found");
     },
   },
   // User: {

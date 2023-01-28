@@ -1,5 +1,5 @@
 export const getUsersWithEntitiesTypeDefs = `
     type Query {
-      getUsersWithEntities: [UserWithEntities]
+      usersWithEntities: [UserWithEntities]
     }    
 `;

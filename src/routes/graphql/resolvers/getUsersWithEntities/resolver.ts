@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify/types/instance";
 
 export const getUsersWithEntitiesResolver = {
   Query: {
-    getUsersWithEntities: async (
+    usersWithEntities: async (
       root: unknown,
       _: unknown,
       fastify: FastifyInstance

@@ -1,6 +1,6 @@
 export const getUserByIdWithEntitiesTypeDefs = `
     type Query {
-      getUserByIdWithEntities(id: ID!): UserWithEntities
+      userWithEntities(id: ID!): UserWithEntities
     } 
     type UserWithEntities {
       id: ID!

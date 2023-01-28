@@ -13,7 +13,7 @@ export const getEntitiesByIdResolver = {
         return user;
       }
 
-      throw fastify.httpErrors.notFound();
+      throw fastify.httpErrors.notFound("user not found");
     },
     post: async (
       root: unknown,
@@ -26,7 +26,7 @@ export const getEntitiesByIdResolver = {
         return post;
       }
 
-      throw fastify.httpErrors.notFound();
+      throw fastify.httpErrors.notFound("post not found");
     },
     profile: async (
       root: unknown,
@@ -42,7 +42,7 @@ export const getEntitiesByIdResolver = {
         return profile;
       }
 
-      throw fastify.httpErrors.notFound();
+      throw fastify.httpErrors.notFound("profile not found");
     },
     memberType: async (
       root: unknown,
@@ -58,7 +58,7 @@ export const getEntitiesByIdResolver = {
         return memberType;
       }
 
-      throw fastify.httpErrors.notFound();
+      throw fastify.httpErrors.notFound("member type not found");
     },
   },
 };
