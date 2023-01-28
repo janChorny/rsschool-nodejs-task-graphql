@@ -3,6 +3,6 @@ export const getEntitiesByIdTypeDefs = `
       user(id: ID!): UserEntity
       post(id: ID!): PostEntity
       profile(id: ID!): ProfileEntity
-      memberType: MemberTypeEntity
+      memberType(id: ID!): MemberTypeEntity
     } 
 `;
