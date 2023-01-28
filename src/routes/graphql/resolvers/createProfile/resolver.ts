@@ -25,7 +25,13 @@ export const createProfileResolver = {
       }
 
       if (!isMemberTypeExist) {
-        throw fastify.httpErrors.badRequest("incorrect member types");
+        const memberTypeIds = (await fastify.db.memberTypes.findMany()).map(
+          (type) => type.id
+        );
+
+        return fastify.httpErrors.badRequest(
+          `memberTypeId must be one of ${[...memberTypeIds]}`
+        );
       }
 
       return profile;
