@@ -16,7 +16,7 @@ export const updatePostResolver = {
 
         return post;
       } catch (error) {
-        throw fastify.httpErrors.badRequest();
+        throw fastify.httpErrors.badRequest("post not found");
       }
     },
   },

@@ -3,7 +3,7 @@ import { ProfileEntity } from "../../../../utils/DB/entities/DBProfiles";
 
 export const updateProfileResolver = {
   Mutation: {
-    updatePost: async (
+    updateProfile: async (
       root: unknown,
       {
         id,
