@@ -1,6 +1,6 @@
-export const getSubscribeAndSubscribedUsersTypeDefs = `
+export const getUsersSubscriptionsTypeDefs = `
     type Query {
-      getSubscribeAndSubscribedUsers: [UserSubscriptions]!     
+      usersSubscriptions: [UserSubscriptions]!     
     }   
 
     type UserSubscriptions {
@@ -13,4 +13,3 @@ export const getSubscribeAndSubscribedUsersTypeDefs = `
       userSubscribedTo: [UserSubscriptions]
     }
 `;
-

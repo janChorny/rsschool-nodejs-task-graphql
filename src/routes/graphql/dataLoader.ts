@@ -47,7 +47,7 @@ export const loaders: MercuriusLoaders = {
       });
     },
   },
-  UsersWithSubscribedUsersProfile: {
+  UsersSubscriberProfiles: {
     async subscribedProfile(queries, ctx) {
       const { db } = ctx.app;
 
@@ -61,7 +61,7 @@ export const loaders: MercuriusLoaders = {
       });
     },
   },
-  UserWithUsersSubscribedPosts: {
+  UserFollowersPosts: {
     async subscriberPosts(queries, ctx) {
       const { db } = ctx.app;
 

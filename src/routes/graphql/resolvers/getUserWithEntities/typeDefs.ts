@@ -1,4 +1,4 @@
-export const getUserByIdWithEntitiesTypeDefs = `
+export const getUserWithEntitiesTypeDefs = `
     type Query {
       userWithEntities(id: ID!): UserWithEntities
     } 

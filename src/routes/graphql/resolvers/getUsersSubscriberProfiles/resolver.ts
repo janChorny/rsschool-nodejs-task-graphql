@@ -1,8 +1,8 @@
 import { FastifyInstance } from "fastify/types/instance";
 
-export const getUsersProfileSubscribedToResolver = {
+export const getUsersSubscriberProfilesResolver = {
   Query: {
-    getUsersProfileSubscribedTo: async (
+    usersSubscriberProfiles: async (
       root: unknown,
       _: unknown,
       fastify: FastifyInstance

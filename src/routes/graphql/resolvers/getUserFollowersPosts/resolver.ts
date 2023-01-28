@@ -1,8 +1,8 @@
 import { FastifyInstance } from "fastify/types/instance";
 
-export const getPostsUsersSubscribedToByIdResolver = {
+export const getUserFollowersPostsResolver = {
   Query: {
-    getPostsUsersSubscribedToById: async (
+    userFollowersPosts: async (
       root: unknown,
       { id }: { id: string },
       fastify: FastifyInstance

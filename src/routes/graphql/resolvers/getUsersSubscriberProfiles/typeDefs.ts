@@ -1,9 +1,9 @@
-export const getUsersProfileSubscribedToTypeDefs = `
+export const getUsersSubscriberProfilesTypeDefs = `
     type Query {
-      getUsersProfileSubscribedTo: [UsersWithSubscribedUsersProfile]     
+      usersSubscriberProfiles: [UsersSubscriberProfiles]     
     }   
 
-    type UsersWithSubscribedUsersProfile {
+    type UsersSubscriberProfiles {
       id: ID!
       firstName: String!
       lastName: String!

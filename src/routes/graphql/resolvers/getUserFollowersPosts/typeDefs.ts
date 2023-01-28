@@ -1,9 +1,9 @@
-export const getPostsUsersSubscribedToByIdTypeDefs = `
+export const getUserFollowersPostsTypeDefs = `
     type Query {
-      getPostsUsersSubscribedToById(id: ID!): UserWithUsersSubscribedPosts    
+      userFollowersPosts(id: ID!): UserFollowersPosts    
     }   
 
-    type UserWithUsersSubscribedPosts {
+    type UserFollowersPosts {
       id: ID!
       firstName: String!
       lastName: String!
