@@ -31,5 +31,26 @@ query {
    email
    subscribedToUserIds
   }
+  posts {
+   id
+   title
+   content
+   userId
+  }
+  profiles {
+   id
+   avatar
+   sex
+   birthday
+   country
+   street
+   city
+   memberTypeId
+  }
+  memberTypes {
+   id
+   discount
+   monthPostsLimit
+  }
 }
 ```
