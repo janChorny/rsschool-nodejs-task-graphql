@@ -20,7 +20,7 @@
 
 1. Get gql requests:
 
-- Get all users.
+- Get users, profiles, posts, memberTypes - 4 operations in one query.
 
 ```
 query {
@@ -52,5 +52,32 @@ query {
    discount
    monthPostsLimit
   }
+}
+```
+- Get user, profile, post, memberType by id - 4 operations in one query.
+
+```
+query {
+    user (id: "") {
+        firstName
+        lastName
+        email
+    }
+    post (id: "") {
+        title
+        content
+    }
+    profile (id: "") {
+        avatar
+        sex
+        birthday
+        country
+        street
+        city
+    }
+    memberType (id: "basic") {
+        discount
+        monthPostsLimit
+    }
 }
 ```
