@@ -9,7 +9,14 @@
 
 ## To test endpoins:
 
-- `npm run test`
+1. To start the server at http://127.0.0.1:3000 use:
+```
+npm run start
+```
+2. Than run tests:
+```
+npm run test
+```
 
 ## Usage:
 
