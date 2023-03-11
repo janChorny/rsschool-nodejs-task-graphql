@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify";
 import { GraphQLString } from "graphql";
 import { UserEntity } from "../../../utils/DB/entities/DBUsers";
 import { isUuid } from "../../../utils/isUuid";
-import { removeArrayItem } from "../../../utils/DB/removeItem";
+import { removeArrayItem } from "../../../utils/removeItem";
 import { ContextValueType } from "../loaders/loaders";
 import { userCreateType, userSubscribeToInput, userType, userUnsubscribeFromInput, userUpdateType } from "../types/userType";
 

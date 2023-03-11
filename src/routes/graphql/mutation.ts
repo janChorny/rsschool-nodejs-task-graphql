@@ -5,7 +5,7 @@ import { createProfileQuery, updateProfileQuery } from "./mutations/profileMutat
 import { createUserQuery, subscribeUserToQuery, unsubscribeUserFromQuery, updateUserQuery } from "./mutations/userMutation";
 
 export const generalMutation = new GraphQLObjectType({
-  name: 'General Mutation',
+  name: 'GeneralMutation',
   fields: {
     createUser: createUserQuery,
     updateUser: updateUserQuery,

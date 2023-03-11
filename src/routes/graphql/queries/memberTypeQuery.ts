@@ -1,5 +1,5 @@
 import { GraphQLList, GraphQLString } from "graphql";
-import { ContextValueType, Loaders } from "../loaders/loaders";
+import { ContextValueType } from "../loaders/loaders";
 import { memberType } from "../types/memberType";
 
 export const memberTypeQuery = {
